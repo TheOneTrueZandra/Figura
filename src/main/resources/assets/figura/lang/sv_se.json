@@ -46,7 +46,7 @@
   "gui.figura.button.tooltip.resetallperm": "Håll VÄNSTRA SKIFT-tangenten och klicka för att återställa behörigheter för denna användare",
   "gui.figura.button.tooltip.clearcache": "Håll VÄNSTRA SKIFT-tangenten och klicka för att rensa all laddad avatardata.",
 
-  "gui.figura.deprecatedwarning" : "*Användningen av modeller i rotmappen har utfasats, se wiki:n för mer information*,
+  "gui.figura.deprecatedwarning" : "*Användningen av modeller i rotmappen har utfasats, se wiki:n för mer information*",
   "gui.figura.complexity": "Komplexitet: %d",
   "gui.figura.filesize": "Filstorlek: %dkb",
   "gui.figura.name": "Namn: %d",
