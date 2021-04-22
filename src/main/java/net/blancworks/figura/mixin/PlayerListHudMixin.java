@@ -5,6 +5,7 @@ import net.blancworks.figura.FiguraMod;
 import net.blancworks.figura.PlayerDataManager;
 import net.minecraft.client.gui.hud.PlayerListHud;
 import net.minecraft.client.network.PlayerListEntry;
+import net.minecraft.text.BaseText;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -18,14 +19,11 @@ public class PlayerListHudMixin {
 
     @Inject(at = @At("RETURN"), method = "getPlayerName", cancellable = true)
     private void getPlayerName(PlayerListEntry entry, CallbackInfoReturnable<Text> cir) {
-        Text text = cir.getReturnValue();
-
-        if (PlayerDataManager.getDataForPlayer(entry.getProfile().getId()).model != null && Config.nameTagMark.value)
-            ((LiteralText) text).append(" ").append(new TranslatableText("figura.mark"));
-
-        if (FiguraMod.special.contains(entry.getProfile().getId()) && Config.nameTagMark.value)
-            ((LiteralText) text).append(" ").append(new TranslatableText("figura.star"));
-
+        if (!Config.nameTagMark.value)
+            return;
+        
+        BaseText text = (BaseText) cir.getReturnValue();
+        text.append(PlayerDataManager.getDataForPlayer(entry.getProfile().getId()).getNameDecorations());
         cir.setReturnValue(text);
     }
 }

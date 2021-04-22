@@ -1,7 +1,6 @@
 package net.blancworks.figura.mixin;
 
 import net.blancworks.figura.Config;
-import net.blancworks.figura.FiguraMod;
 import net.blancworks.figura.PlayerDataManager;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.network.MessageType;
@@ -20,15 +19,16 @@ import java.util.UUID;
 public class InGameHudMixin {
     @Inject(method = "addChatMessage", at = @At("HEAD"))
     private void addChatMessage(MessageType type, Text message, UUID senderUuid, CallbackInfo ci) {
+        if (!Config.nameTagMark.value)
+            return;
+        
         if (senderUuid != Util.NIL_UUID && message instanceof TranslatableText && ((TranslatableText) message).getKey().equals("chat.type.text")) {
             Object[] args = ((TranslatableText) message).getArgs();
             if (args.length > 0 && args[0] instanceof MutableText) {
                 MutableText playerName = ((MutableText) args[0]);
-                if (PlayerDataManager.getDataForPlayer(senderUuid).model != null && Config.nameTagMark.value)
-                    playerName.append(" ").append(new TranslatableText("figura.mark"));
-
-                if (FiguraMod.special.contains(senderUuid) && Config.nameTagMark.value)
-                    playerName.append(" ").append(new TranslatableText("figura.star"));
+                if (Config.nameTagMark.value) {
+                    playerName.append(PlayerDataManager.getDataForPlayer(senderUuid).getNameDecorations());
+                }
             }
         }
     }
