@@ -32,6 +32,7 @@ public class ConfigListWidget extends ElementListWidget<ConfigListWidget.Entry> 
         //entries
         this.addEntry(new ConfigListWidget.BooleanEntry(new TranslatableText("gui.figura.config.previewnametag"), new TranslatableText("gui.figura.config.tooltip.previewnametag"), Config.previewNameTag));
         this.addEntry(new ConfigListWidget.BooleanEntry(new TranslatableText("gui.figura.config.nametagmark"), new TranslatableText("gui.figura.config.tooltip.nametagmark"), Config.nameTagMark));
+        this.addEntry(new ConfigListWidget.BooleanEntry(new TranslatableText("gui.figura.config.nametagmarkcolored"), new TranslatableText("gui.figura.config.tooltip.nametagmarkcolored"), Config.nameTagMarkColored));
 
         //category title
         this.addEntry(new ConfigListWidget.CategoryEntry(new TranslatableText("gui.figura.config.misc")));

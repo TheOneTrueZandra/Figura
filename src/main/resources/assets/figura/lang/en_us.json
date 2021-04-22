@@ -60,6 +60,9 @@
   "gui.figura.config.nametagmark": "Show Figura Mark",
   "gui.figura.config.tooltip.nametagmark": "Adds The Mark △ to the NameTag of players using Figura",
 
+  "gui.figura.config.nametagmarkcolored": "Color Mark Blue",
+  "gui.figura.config.tooltip.nametagmarkcolored": "Paint The Mark △ on players' NameTags blue",
+
   "gui.figura.config.buttonlocation": "Figura Button Location",
   "gui.figura.config.tooltip.buttonlocation": "Location where the Figura settings button should be",
   "gui.figura.config.buttonlocation.topleft": "Top Left",

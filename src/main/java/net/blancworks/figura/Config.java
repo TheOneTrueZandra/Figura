@@ -10,6 +10,7 @@ import java.io.FileWriter;
 public class Config {
     public static ConfigEntry<Boolean> previewNameTag;
     public static ConfigEntry<Boolean> nameTagMark;
+    public static ConfigEntry<Boolean> nameTagMarkColored;
     public static ConfigEntry<Integer> buttonLocation;
 
     private static final File file = new File(FabricLoader.getInstance().getConfigDir().resolve("figura.properties").toString());
@@ -36,6 +37,9 @@ public class Config {
                                 break;
                             case "nameTagMark":
                                 nameTagMark = new ConfigEntry<>(Boolean.parseBoolean(content[1]), true);
+                                break;
+                            case "nameTagMarkColored":
+                                nameTagMarkColored = new ConfigEntry<>(Boolean.parseBoolean(content[1]), true);
                                 break;
                             case "buttonLocation":
                                 int i = Integer.parseInt(content[1]) % 4;
@@ -68,6 +72,9 @@ public class Config {
             writer.write("### Adds The Mark △ to the NameTag of players using Figura ### - default true\n");
             writer.write("nameTagMark=" + nameTagMark.value + "\n\n");
 
+            writer.write("### Paints The Mark △ blue when the player's name doesn't have a color ### - default true\n");
+            writer.write("nameTagMarkColored=" + nameTagMarkColored.value + "\n\n");
+
             writer.write("### Location where the Figura settings button should be ###\n");
             writer.write("### 0 - top left | 1 - top right | 2 - bottom left | 3 - bottom right ### - default 3\n");
             writer.write("buttonLocation=" + buttonLocation.value);
@@ -83,6 +90,7 @@ public class Config {
     public static void setDefaults() {
         previewNameTag = new ConfigEntry<>(true, true);
         nameTagMark = new ConfigEntry<>(true, true);
+        nameTagMarkColored = new ConfigEntry<>(true, true);
         buttonLocation = new ConfigEntry<>(3, 3);
     }
 

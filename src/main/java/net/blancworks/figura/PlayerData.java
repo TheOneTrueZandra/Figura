@@ -18,6 +18,7 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
 import java.io.ByteArrayOutputStream;
@@ -67,6 +68,7 @@ public class PlayerData {
 
     //Name tag and player list mark
     private MutableText nameDecorations;
+    private boolean markCanHazColor = false;
 
     public Identifier getTrustIdentifier() {
         if (trustIdentifier == null)
@@ -281,6 +283,11 @@ public class PlayerData {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            }
+            if (this.lastEntity.getScoreboardTeam() == null) {
+                this.nameDecorations.formatted(Formatting.AQUA);
+            } else {
+                this.nameDecorations.formatted(Formatting.RESET);
             }
         }
     }
