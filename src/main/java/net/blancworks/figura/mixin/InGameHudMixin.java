@@ -26,9 +26,7 @@ public class InGameHudMixin {
             Object[] args = ((TranslatableText) message).getArgs();
             if (args.length > 0 && args[0] instanceof MutableText) {
                 MutableText playerName = ((MutableText) args[0]);
-                if (Config.nameTagMark.value) {
-                    playerName.append(PlayerDataManager.getDataForPlayer(senderUuid).getNameDecorations());
-                }
+                playerName.append(PlayerDataManager.getDataForPlayer(senderUuid).getNameDecorations());
             }
         }
     }
