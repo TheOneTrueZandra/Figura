@@ -46,9 +46,8 @@ public final class PlayerDataManager {
 
         if (!didInitLocalPlayer) {
             if (id == MinecraftClient.getInstance().player.getUuid()) {
-                localPlayer = new LocalPlayerData();
-                localPlayer.playerId = MinecraftClient.getInstance().player.getUuid();
-                LOADED_PLAYER_DATA.put(MinecraftClient.getInstance().player.getUuid(), localPlayer);
+                localPlayer = new LocalPlayerData(id);
+                LOADED_PLAYER_DATA.put(id, localPlayer);
                 didInitLocalPlayer = true;
 
                 if (lastLoadedFileName != null) {
@@ -67,8 +66,7 @@ public final class PlayerDataManager {
             return localPlayer;
 
         if (!LOADED_PLAYER_DATA.containsKey(id)) {
-            getData = new PlayerData();
-            getData.playerId = id;
+            getData = new PlayerData(id);
 
             getPlayerAvatarFromServerOrCache(id, getData);
 

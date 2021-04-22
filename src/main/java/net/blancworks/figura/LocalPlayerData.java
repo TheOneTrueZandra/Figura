@@ -15,6 +15,7 @@ import java.sql.Date;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -37,6 +38,10 @@ public class LocalPlayerData extends PlayerData {
         }
     }
 
+    public LocalPlayerData(UUID playerId) {
+        super(playerId);
+    }
+    
     @Override
     public void tick() {
 

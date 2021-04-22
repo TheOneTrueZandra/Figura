@@ -73,6 +73,10 @@ public class PlayerData {
         return textureManager;
     }
 
+    public PlayerData(UUID playerId) {
+        this.playerId = playerId;
+    }
+    
     /**
      * Writes to the NBT this player data.
      *
