@@ -381,6 +381,8 @@ public class LocalPlayerData extends PlayerData {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        
+        this.updateNameDecorations();
     }
 
     public void tickFileWatchers() {

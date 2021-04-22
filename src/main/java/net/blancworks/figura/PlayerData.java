@@ -14,6 +14,10 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.nbt.Tag;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
 import java.io.ByteArrayOutputStream;
@@ -61,6 +65,9 @@ public class PlayerData {
 
     private Identifier trustIdentifier;
 
+    //Name tag and player list mark
+    private MutableText nameDecorations;
+
     public Identifier getTrustIdentifier() {
         if (trustIdentifier == null)
             trustIdentifier = new Identifier("players", playerId.toString());
@@ -75,6 +82,11 @@ public class PlayerData {
 
     public PlayerData(UUID playerId) {
         this.playerId = playerId;
+        if (FiguraMod.special.contains(this.playerId)) {
+            this.nameDecorations = new LiteralText(" ").append(new TranslatableText("figura.star"));
+        } else {
+            this.nameDecorations = new LiteralText("");
+        }
     }
     
     /**
@@ -204,6 +216,23 @@ public class PlayerData {
         }
     }
 
+    //Return the mark (and star) for this player's name.
+    public Text getNameDecorations() {
+        return this.nameDecorations;
+    }
+    
+    public void updateNameDecorations() {
+        if (this.model != null) {
+            this.nameDecorations = new LiteralText(" ").append(new TranslatableText("figura.mark")).append(new LiteralText(" ")).append(new TranslatableText("figura.star"));
+        } else {
+            if (FiguraMod.special.contains(this.playerId)) {
+                this.nameDecorations = new LiteralText(" ").append(new TranslatableText("figura.star"));
+            } else {
+                this.nameDecorations = new LiteralText("");
+            }
+        }
+    }
+
     //Returns the file size, in bytes.
     public int getFileSize() {
         CompoundTag writtenNbt = new CompoundTag();
@@ -262,6 +291,8 @@ public class PlayerData {
         this.readNbt(nbt);
 
         getFileSize();
+        
+        this.updateNameDecorations();
     }
 
     public TrustContainer getTrustContainer() {
