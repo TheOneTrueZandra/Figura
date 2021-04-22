@@ -18,9 +18,8 @@ import net.minecraft.client.render.entity.LivingEntityRenderer;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -125,7 +124,7 @@ public class PlayerEntityRendererMixin extends LivingEntityRenderer<AbstractClie
         if (!Config.nameTagMark.value)
             return;
         
-        ((LiteralText) text).append(PlayerDataManager.getDataForPlayer(abstractClientPlayerEntity.getUuid()).getNameDecorations());
+        ((MutableText) text).append(PlayerDataManager.getDataForPlayer(abstractClientPlayerEntity.getUuid()).getNameDecorations());
     }
 
     public void figura$applyPartCustomization(String id, ModelPart part) {
