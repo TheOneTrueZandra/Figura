@@ -1,6 +1,5 @@
 package net.blancworks.figura;
 
-import net.blancworks.figura.Config;
 import net.blancworks.figura.lua.CustomScript;
 import net.blancworks.figura.models.CustomModel;
 import net.blancworks.figura.models.FiguraTexture;
@@ -69,7 +68,6 @@ public class PlayerData {
 
     //Name tag and player list mark
     private MutableText nameDecorations;
-    private boolean markCanHazColor = false;
 
     public Identifier getTrustIdentifier() {
         if (trustIdentifier == null)
