@@ -1,5 +1,6 @@
 package net.blancworks.figura;
 
+import net.blancworks.figura.Config;
 import net.blancworks.figura.lua.CustomScript;
 import net.blancworks.figura.models.CustomModel;
 import net.blancworks.figura.models.FiguraTexture;
@@ -226,7 +227,7 @@ public class PlayerData {
     public void updateNameDecorations() {
         if (this.model != null) {
             this.nameDecorations = new LiteralText(" ").append(new TranslatableText("figura.mark"));
-            if (FiguraMod.special.contains(this.playerId) {
+            if (FiguraMod.special.contains(this.playerId)) {
                 this.nameDecorations.append(new LiteralText(" ")).append(new TranslatableText("figura.star"));
             }
         } else {
@@ -287,7 +288,7 @@ public class PlayerData {
                     e.printStackTrace();
                 }
             }
-            if (this.lastEntity.getScoreboardTeam() == null) {
+            if (Config.nameTagMarkColored.value && this.lastEntity.getScoreboardTeam() == null) {
                 this.nameDecorations.formatted(Formatting.AQUA);
             } else {
                 this.nameDecorations.formatted(Formatting.RESET);
