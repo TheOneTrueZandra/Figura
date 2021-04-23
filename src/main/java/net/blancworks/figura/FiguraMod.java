@@ -7,6 +7,8 @@ import net.blancworks.figura.models.CustomModel;
 import net.blancworks.figura.models.CustomModelPart;
 import net.blancworks.figura.models.parsers.BlockbenchModelDeserializer;
 import net.blancworks.figura.network.FiguraNetworkManager;
+import net.blancworks.figura.network.IFiguraNetwork;
+import net.blancworks.figura.network.NewFiguraNetworkManager;
 import net.blancworks.figura.trust.PlayerTrustManager;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -49,8 +51,12 @@ public class FiguraMod implements ClientModInitializer {
     private static CompletableFuture globalLoadTask;
 
     private PlayerDataManager dataManagerInstance;
-
-
+    
+    public static IFiguraNetwork networkManager;
+    
+    private static FiguraNetworkManager oldNetworkManager;
+    private static NewFiguraNetworkManager newNetworkManager;
+    
     //Used during rendering.
     public static AbstractClientPlayerEntity currentPlayer;
     public static PlayerData currentData;
@@ -86,6 +92,17 @@ public class FiguraMod implements ClientModInitializer {
         PlayerTrustManager.init();
         Config.initialize();
 
+        //Set up network
+        oldNetworkManager = new FiguraNetworkManager();
+        newNetworkManager = new NewFiguraNetworkManager();
+        
+        if(Config.useNewNetwork.value){
+            networkManager = newNetworkManager;
+        } else {
+            networkManager = oldNetworkManager;
+        }
+        
+        //Register fabric events
         ClientTickEvents.END_CLIENT_TICK.register(FiguraMod::ClientEndTick);
         WorldRenderEvents.AFTER_ENTITIES.register(FiguraMod::renderFirstPersonWorldParts);
 
@@ -108,7 +125,15 @@ public class FiguraMod implements ClientModInitializer {
     //Client-side ticks.
     public static void ClientEndTick(MinecraftClient client) {
         PlayerDataManager.tick();
-        FiguraNetworkManager.tickNetwork();
+        
+        if(Config.useNewNetwork.value){
+            networkManager = newNetworkManager;
+        } else {
+            networkManager = oldNetworkManager;
+        }
+     
+        if(networkManager != null)
+            networkManager.tickNetwork();
     }
 
     public static Path getModContentDirectory() {

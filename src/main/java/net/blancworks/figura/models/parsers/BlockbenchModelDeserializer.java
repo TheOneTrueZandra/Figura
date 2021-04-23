@@ -1,7 +1,6 @@
 package net.blancworks.figura.models.parsers;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.gson.*;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.blancworks.figura.LocalPlayerData;
 import net.blancworks.figura.models.CustomModel;

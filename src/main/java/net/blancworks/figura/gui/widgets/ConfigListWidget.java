@@ -45,6 +45,14 @@ public class ConfigListWidget extends ElementListWidget<ConfigListWidget.Entry> 
                 new TranslatableText("gui.figura.config.buttonlocation.bottomright")
         );
         this.addEntry(new MultiStateEntry(new TranslatableText("gui.figura.config.buttonlocation"), new TranslatableText("gui.figura.config.tooltip.buttonlocation"), Config.buttonLocation, buttonLocationEntries));
+        
+        
+        //category title
+        this.addEntry(new ConfigListWidget.CategoryEntry(new TranslatableText("gui.figura.config.dev").formatted(Formatting.RED)));
+
+        //entries
+        this.addEntry(new ConfigListWidget.BooleanEntry(new TranslatableText("gui.figura.config.usenewnetwork"), new TranslatableText("gui.figura.config.tooltip.usenewnetwork"), Config.useNewNetwork));
+        this.addEntry(new ConfigListWidget.BooleanEntry(new TranslatableText("gui.figura.config.uselocalserver"), new TranslatableText("gui.figura.config.tooltip.uselocalserver"), Config.useLocalServer));
     }
 
     @Override

@@ -296,9 +296,11 @@ public class PlayerData {
 
     public void loadFromNbt(DataInputStream input) throws Exception {
         CompoundTag nbt = NbtIo.readCompressed(input);
+        loadFromNbt(nbt);
+    }
 
-        this.readNbt(nbt);
-
+    public void loadFromNbt(CompoundTag tag) {
+        this.readNbt(tag);
         getFileSize();
         
         this.updateNameDecorations();

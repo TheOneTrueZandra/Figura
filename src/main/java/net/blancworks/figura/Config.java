@@ -12,6 +12,9 @@ public class Config {
     public static ConfigEntry<Boolean> nameTagMark;
     public static ConfigEntry<Boolean> nameTagMarkColored;
     public static ConfigEntry<Integer> buttonLocation;
+    public static ConfigEntry<Boolean> useNewNetwork;
+    public static ConfigEntry<Boolean> useLocalServer;
+
 
     private static final File file = new File(FabricLoader.getInstance().getConfigDir().resolve("figura.properties").toString());
 
@@ -40,6 +43,11 @@ public class Config {
                                 break;
                             case "nameTagMarkColored":
                                 nameTagMarkColored = new ConfigEntry<>(Boolean.parseBoolean(content[1]), true);
+                            case "useNewNetwork":
+                                useNewNetwork = new ConfigEntry<>(Boolean.parseBoolean(content[1]), true);
+                                break;
+                            case "useLocalServer":
+                                useLocalServer = new ConfigEntry<>(Boolean.parseBoolean(content[1]), true);
                                 break;
                             case "buttonLocation":
                                 int i = Integer.parseInt(content[1]) % 4;
@@ -75,6 +83,12 @@ public class Config {
             writer.write("### Paints The Mark △ blue when the player's name doesn't have a color ### - default true\n");
             writer.write("nameTagMarkColored=" + nameTagMarkColored.value + "\n\n");
 
+            writer.write("### Toggles between using the new or old network for online models\n");
+            writer.write("useNewNetwork=" + useNewNetwork.value + "\n\n");
+
+            writer.write("### Toggles between using a local server or the main online server for online models\n");
+            writer.write("useLocalServer=" + useLocalServer.value + "\n\n");
+            
             writer.write("### Location where the Figura settings button should be ###\n");
             writer.write("### 0 - top left | 1 - top right | 2 - bottom left | 3 - bottom right ### - default 3\n");
             writer.write("buttonLocation=" + buttonLocation.value);
@@ -92,6 +106,8 @@ public class Config {
         nameTagMark = new ConfigEntry<>(true, true);
         nameTagMarkColored = new ConfigEntry<>(true, true);
         buttonLocation = new ConfigEntry<>(3, 3);
+        useNewNetwork = new ConfigEntry<>(false, false);
+        useLocalServer = new ConfigEntry<>(false, false);
     }
 
     public static class ConfigEntry<T> {

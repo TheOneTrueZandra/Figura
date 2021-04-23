@@ -8,7 +8,6 @@ import net.blancworks.figura.PlayerDataManager;
 import net.blancworks.figura.gui.widgets.CustomListWidgetState;
 import net.blancworks.figura.gui.widgets.ModelFileListWidget;
 import net.blancworks.figura.gui.widgets.TexturedButtonWidget;
-import net.blancworks.figura.network.FiguraNetworkManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.ConfirmChatLinkScreen;
@@ -185,7 +184,7 @@ public class FiguraGuiScreen extends Screen {
                 deleteTexture, 50, 50,
                 (bx) -> {
                     if(isHoldingShift)
-                        FiguraNetworkManager.deleteModel();
+                        FiguraMod.networkManager.deleteAvatar();
                 }
         );
         this.addButton(deleteButton);
@@ -197,7 +196,9 @@ public class FiguraGuiScreen extends Screen {
                 25, 25,
                 0, 0, 25,
                 uploadTexture, 25, 50,
-                (bx) -> FiguraNetworkManager.postModel()
+                (bx) -> {
+                    FiguraMod.networkManager.postAvatar().thenRun(()->System.out.println("UPLOADED AVATAR"));
+                }
         );
         this.addButton(uploadButton);
 

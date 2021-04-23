@@ -53,7 +53,9 @@
 
   "gui.figura.config.nametag": "NameTag",
   "gui.figura.config.misc": "Misc",
+  "gui.figura.config.dev": "Developer Settings",
 
+  
   "gui.figura.config.previewnametag": "Show Preview NameTag",
   "gui.figura.config.tooltip.previewnametag": "Displays your NameTag on the model preview screen",
 
@@ -62,6 +64,14 @@
 
   "gui.figura.config.nametagmarkcolored": "Color Mark Blue",
   "gui.figura.config.tooltip.nametagmarkcolored": "Paint The Mark △ on players' NameTags blue",
+
+
+  "gui.figura.config.usenewnetwork": "Use New Network",
+  "gui.figura.config.tooltip.usenewnetwork": "Toggles between using the new or old network for online models",
+
+  "gui.figura.config.uselocalserver": "Use Local Server",
+  "gui.figura.config.tooltip.uselocalserver": "Toggles between using a local server or the main online server for online models",
+
 
   "gui.figura.config.buttonlocation": "Figura Button Location",
   "gui.figura.config.tooltip.buttonlocation": "Location where the Figura settings button should be",

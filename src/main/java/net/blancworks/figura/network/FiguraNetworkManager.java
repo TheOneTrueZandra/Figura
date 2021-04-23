@@ -1,5 +1,8 @@
 package net.blancworks.figura.network;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import net.blancworks.figura.Config;
 import net.blancworks.figura.FiguraMod;
 import net.blancworks.figura.PlayerData;
 import net.blancworks.figura.PlayerDataManager;
@@ -24,6 +27,7 @@ import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.URL;
 import java.nio.file.Files;
+import java.util.Base64;
 import java.util.Date;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -33,23 +37,24 @@ import java.util.concurrent.CompletableFuture;
  * Used to manage the network operations for Figura.
  * Used for sending/receiving data, managing custom packets/networking, that sort.
  */
-public class FiguraNetworkManager {
+public class FiguraNetworkManager implements IFiguraNetwork {
 
     //This is the key for the session the user has with figura.
     //DO NOT LET PLAYERS ACCESS THIS!!!!!!
     //I mean, you could, but it just runs too many risks of them giving their key to someone who shouldn't have it.
-    public static int figuraSessionKey;
+    public int figuraSessionKey;
 
     //False until the auth key has been acquired. also false if auth key becomes invalid.
-    private static boolean hasAuthKey = false;
-    private static Date lastAuthDate = null;
+    private boolean hasAuthKey = false;
+    private Date lastAuthDate = null;
 
-    public static CompletableFuture currentAuthTask = null;
+    public CompletableFuture currentAuthTask = null;
 
     //Ticks the network
     //Checks after 20 minutes, attempt to get a fresh key with our previously valid one.
     //Repeat re-grab for fresh key 10 times, or until server returns unauthorized 
-    public static void tickNetwork() {
+    @Override
+    public void tickNetwork() {
         if (lastAuthDate != null) {
             Date now = new Date();
             long diff = now.getTime() - lastAuthDate.getTime();
@@ -61,27 +66,118 @@ public class FiguraNetworkManager {
                 lastAuthDate = new Date(now.getTime() - 1000 * 60 * 19);
 
                 //Attempt to refresh key.
-                refreshKeyValidity(() -> {});
+                refreshKeyValidity(() -> {
+                });
             }
         }
+    }
+
+    @Override
+    public CompletableFuture<CompoundTag> getAvatarData(UUID id) {
+        return CompletableFuture.supplyAsync(()-> {
+            HttpURLConnection httpURLConnection = null;
+
+            
+            try {
+                //Object to fill data with
+                JsonObject targetObject = null;
+
+                //Url for this asset file.
+                URL url = new URL(String.format("%s/api/avatar/%s", getServerURL(), id));
+
+                //Open connection and set things up.
+                httpURLConnection = (HttpURLConnection) (url).openConnection(MinecraftClient.getInstance().getNetworkProxy());
+                httpURLConnection.setDoInput(true);
+                httpURLConnection.setDoOutput(false);
+                httpURLConnection.connect();
+
+                //If response code is OK, we know we got a valid avatar, so load it.
+                if (httpURLConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    //Put JSON into string
+                    BufferedReader in = new BufferedReader(
+                            new InputStreamReader(httpURLConnection.getInputStream()));
+                    String inputLine;
+                    StringBuilder content = new StringBuilder();
+                    while ((inputLine = in.readLine()) != null) {
+                        content.append(inputLine);
+                    }
+                    in.close();
+                    //Parse JSON
+                    JsonParser parser = new JsonParser();
+                    targetObject = parser.parse(content.toString()).getAsJsonObject();
+                }
+
+                httpURLConnection.disconnect();
+
+
+                //Attempt to load data from the JSON we just got from the server
+                if (targetObject != null) {
+                    String dataString = targetObject.get("data").getAsString();
+                    if (dataString.length() != 0) {
+                        byte[] dataAsBytes = Base64.getDecoder().decode(dataString);
+                        InputStream dataAsStream = new ByteArrayInputStream(dataAsBytes);
+                        DataInputStream receivedDataToStream = new DataInputStream(dataAsStream);
+                        receivedDataToStream.reset();
+                        CompoundTag nbt = NbtIo.readCompressed(receivedDataToStream);
+                        
+                        return nbt;
+                    }
+                }
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+
+            httpURLConnection.disconnect();
+            return null;
+        });
+    }
+
+    @Override
+    public CompletableFuture<UUID> postAvatar() {
+        return CompletableFuture.supplyAsync(()->{
+            postModel();
+            return PlayerDataManager.localPlayer.playerId; 
+        });
+    }
+
+    //Does nothing for this.
+    @Override
+    public CompletableFuture setAvatarCurr(UUID avatarID) {
+        return CompletableFuture.runAsync(() -> {
+        });
+    }
+
+    @Override
+    public CompletableFuture deleteAvatar() {
+        return CompletableFuture.runAsync(this::deleteModel);
+    }
+
+    @Override
+    public CompletableFuture<String> asyncGetAvatarHash(UUID avatarID) {
+        return asyncGetAvatarHash(avatarID);
+    }
+
+    @Override
+    public void parseKickAuthMessage(Text reason) {
+        parseAuthKeyFromDisconnectMessage(reason);
     }
 
 
     //--AUTH--
 
     //Spawns async method for authenticating a user. 
-    public static CompletableFuture authUser() {
+    public CompletableFuture authUser() {
         if (currentAuthTask != null)
             return currentAuthTask;
 
         return CompletableFuture.runAsync(
-                FiguraNetworkManager::asyncAuthUser,
+                this::asyncAuthUser,
                 Util.getMainWorkerExecutor()
         );
     }
 
     //Asynchronously authenticates the user using the Figura server.
-    private static void asyncAuthUser() {
+    private void asyncAuthUser() {
         try {
             String address = getMinecraftAuthServerAddress();
             InetAddress inetAddress = InetAddress.getByName(address);
@@ -109,7 +205,7 @@ public class FiguraNetworkManager {
         currentAuthTask = null;
     }
 
-    public static void parseAuthKeyFromDisconnectMessage(Text reason) {
+    public void parseAuthKeyFromDisconnectMessage(Text reason) {
         try {
             if (reason.asString().equals("This is the Figura Auth Server!\n")) {
 
@@ -128,12 +224,12 @@ public class FiguraNetworkManager {
         }
     }
 
-    public static boolean hasAuthKey() {
+    public boolean hasAuthKey() {
         return hasAuthKey;
     }
 
     //Attempts to refresh a key using the figura auth server.
-    public static CompletableFuture refreshKeyValidity(Runnable onFinished) {
+    public CompletableFuture refreshKeyValidity(Runnable onFinished) {
         return CompletableFuture.runAsync(
                 () -> {
                     //Don't do anything if we know we have no valid key already.
@@ -187,7 +283,7 @@ public class FiguraNetworkManager {
 
     //--AVATAR STATUS--
 
-    public static void postModel() {
+    public void postModel() {
         String uuidString = MinecraftClient.getInstance().player.getUuid().toString();
 
         try {
@@ -203,7 +299,7 @@ public class FiguraNetworkManager {
                 }
 
                 try {
-                    URL url = new URL(String.format("%s/api/avatar/%s?key=%d", FiguraNetworkManager.getServerURL(), uuidString, figuraSessionKey));
+                    URL url = new URL(String.format("%s/api/avatar/%s?key=%d", getServerURL(), uuidString, figuraSessionKey));
                     PlayerData data = PlayerDataManager.localPlayer;
 
                     CompoundTag infoNbt = new CompoundTag();
@@ -236,7 +332,7 @@ public class FiguraNetworkManager {
     }
 
     //Deletes the player model off of the server.
-    public static void deleteModel() {
+    public void deleteModel() {
         String uuidString = MinecraftClient.getInstance().player.getUuid().toString();
 
         try {
@@ -252,7 +348,7 @@ public class FiguraNetworkManager {
                 }
 
                 try {
-                    URL url = new URL(String.format("%s/api/avatar/%s?key=%d", FiguraNetworkManager.getServerURL(), uuidString, figuraSessionKey));
+                    URL url = new URL(String.format("%s/api/avatar/%s?key=%d", getServerURL(), uuidString, figuraSessionKey));
                     PlayerData data = PlayerDataManager.localPlayer;
 
                     CompoundTag infoNbt = new CompoundTag();
@@ -278,17 +374,17 @@ public class FiguraNetworkManager {
         }
     }
 
-    public static CompletableFuture<String> getAvatarHash(UUID uuid) {
+    public CompletableFuture<String> getAvatarHash(UUID uuid) {
         return CompletableFuture.supplyAsync(
                 () -> getAvatarHashSync(uuid), Util.getMainWorkerExecutor()
         );
     }
 
-    public static String getAvatarHashSync(UUID id) {
+    public String getAvatarHashSync(UUID id) {
 
         try {
             String uuidString = id.toString();
-            HttpURLConnection httpURLConnection = createReadConnection(String.format("%s/api/avatar/hash/%s", FiguraNetworkManager.getServerURL(), uuidString));
+            HttpURLConnection httpURLConnection = createReadConnection(String.format("%s/api/avatar/hash/%s", getServerURL(), uuidString));
             httpURLConnection.connect();
 
             //Only continue if response was OK.
@@ -306,11 +402,11 @@ public class FiguraNetworkManager {
     //Player data stuff
     //Right now just gets avatar, but will eventually get other stuff like report data.
 
-    public static CompletableFuture<PlayerData> getPlayerData(UUID uuid) {
+    public CompletableFuture<PlayerData> getPlayerData(UUID uuid) {
         return null;
     }
 
-    private static PlayerData getData(UUID id) {
+    private PlayerData getData(UUID id) {
 
         return null;
     }
@@ -322,26 +418,26 @@ public class FiguraNetworkManager {
     //localhost for local testing
     //figura.blancworks.org for proper online use.
     //TODO - Add support for a server list later for people who want to have their own avatar servers
-    private static String getServerAddress() {
-        if (FabricLoader.getInstance().isDevelopmentEnvironment() && Files.exists(FabricLoader.getInstance().getConfigDir().resolve("figura").resolve("localnetwork.json"))) {
+    private String getServerAddress() {
+        if (Config.useLocalServer.value) {
             return "localhost:5001";
         }
         return "figura.blancworks.org";
     }
 
-    private static String getMinecraftAuthServerAddress() {
-        if (FabricLoader.getInstance().isDevelopmentEnvironment() && Files.exists(FabricLoader.getInstance().getConfigDir().resolve("figura").resolve("localnetwork.json"))) {
+    private String getMinecraftAuthServerAddress() {
+        if (Config.useLocalServer.value) {
             return "localhost";
         }
         return "mc.blancworks.org";
     }
 
     //This is set to 
-    public static String getServerURL() {
+    public String getServerURL() {
         return String.format("http://%s", getServerAddress());
     }
 
-    public static String readStringFromStream(InputStream stream) throws IOException {
+    public String readStringFromStream(InputStream stream) throws IOException {
         //Put JSON into string
         BufferedReader in = new BufferedReader(
                 new InputStreamReader(stream));
@@ -355,12 +451,12 @@ public class FiguraNetworkManager {
         return content.toString();
     }
 
-    public static HttpURLConnection createConnection(String destination) throws Exception {
+    public HttpURLConnection createConnection(String destination) throws Exception {
         URL dst = new URL(destination);
         return (HttpURLConnection) dst.openConnection(MinecraftClient.getInstance().getNetworkProxy());
     }
 
-    public static HttpURLConnection createReadConnection(String destination) throws Exception {
+    public HttpURLConnection createReadConnection(String destination) throws Exception {
         HttpURLConnection c = createConnection(destination);
         c.setDoInput(true);
         c.setDoOutput(false);

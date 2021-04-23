@@ -1,6 +1,6 @@
 package net.blancworks.figura.mixin;
 
-import net.blancworks.figura.network.FiguraNetworkManager;
+import net.blancworks.figura.FiguraMod;
 import net.minecraft.client.network.ClientLoginNetworkHandler;
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
@@ -12,6 +12,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class ClientLoginNetworkHandlerMixin {
     @Inject(at = @At("HEAD"), method = "onDisconnected(Lnet/minecraft/text/Text;)V")
     public void onDisconnected(Text reason, CallbackInfo ci) {
-        FiguraNetworkManager.parseAuthKeyFromDisconnectMessage(reason);
+        FiguraMod.networkManager.parseKickAuthMessage(reason);
     }
 }
