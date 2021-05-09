@@ -34,6 +34,7 @@ public class CustomModelPart {
     public Vector3f pivot = new Vector3f();
     public Vector3f pos = new Vector3f();
     public Vector3f rot = new Vector3f();
+    public Vector3f size = new Vector3f();
     public Vector3f scale = new Vector3f(1, 1, 1);
     public Vector3f color = new Vector3f(1, 1, 1);
 
@@ -459,6 +460,10 @@ public class CustomModelPart {
             ListTag list = (ListTag) partNbt.get("rot");
             this.rot = vec3fFromNbt(list);
         }
+        if (partNbt.contains("siz")) {
+            ListTag list = (ListTag) partNbt.get("siz");
+            this.scale = vec3fFromNbt(list);
+        }
         if (partNbt.contains("scl")) {
             ListTag list = (ListTag) partNbt.get("scl");
             this.scale = vec3fFromNbt(list);
@@ -515,6 +520,9 @@ public class CustomModelPart {
         }
         if (!this.rot.equals(new Vector3f(0, 0, 0))) {
             partNbt.put("rot", vec3fToNbt(this.rot));
+        }
+        if (!this.size.equals(new Vector3f(0, 0, 0))) {
+            partNbt.put("siz", vec3fToNbt(this.size));
         }
         if (!this.scale.equals(new Vector3f(1, 1, 1))) {
             partNbt.put("scl", vec3fToNbt(this.scale));

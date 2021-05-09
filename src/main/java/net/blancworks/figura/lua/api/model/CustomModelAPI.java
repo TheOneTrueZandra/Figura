@@ -101,6 +101,13 @@ public class CustomModelAPI {
                 }
             });
 
+            ret.set("getSize", new ZeroArgFunction() {
+                @Override
+                public LuaValue call() {
+                    return LuaVector.of(targetPart.size);
+                }
+            });
+
             ret.set("getScale", new ZeroArgFunction() {
                 @Override
                 public LuaValue call() {
