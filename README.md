@@ -15,7 +15,7 @@ An external authentication server processes your avatars, which therefore allows
 
 Figura comes with its limitations, however these are made with the best intentions in mind to ensure that others do not either suffer from performance issues or outright crash.
 
-Figura is built with the intent to give creators full creative freedom. This comes in the form of an extremely easy to use creation pipeline, and a verbose and extensive Lua API for reading data from Minecraft. With a filesize limit of just 100kb, avatars can go a long way with such a small folder.
+Figura is built with the intent to give creators full creative freedom. This comes in the form of an extremely easy to use creation pipeline, and a verbose and extensive Lua API for reading data from Minecraft. With a filesize limit of just 100kb, avatars can go a long way for something so small.
 </br></br>
 ## ***What's so Great about Figura?***
 Notable features for the mod include, but aren't limited to...
