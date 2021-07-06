@@ -32,7 +32,7 @@ Notable features for the mod include, but aren't limited to...
   - **Users are required to have the mod installed** to see your avatar, serverside introduces additional features for your fantastic avatars to mess around with.
 
 ### **Freedom and Security**
-  - **Your skill is the limit**! Figura is built to support users in creating the avatars that they have always wanted to create. Whether it be an EVA Unit or an Autobot!
+  - **Your skill is the limit**! Figura is built to support users in creating the avatars that they have always wanted to create. Anything from a working solar system to a controllable drone!
   - **Security is at the forefront** of the mod, so that you don't have to worry about losing your personally identifiable information.
   - **Sharing your data is an intentional opt-in** and only required for debugging purposes. Figura will **never** use your data for advertising.
 
