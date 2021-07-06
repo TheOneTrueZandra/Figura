@@ -1,6 +1,7 @@
 package net.blancworks.figura.network.messages.user;
 
 import com.google.common.io.LittleEndianDataInputStream;
+import net.blancworks.figura.FiguraMod;
 import net.blancworks.figura.PlayerData;
 import net.blancworks.figura.PlayerDataManager;
 import net.blancworks.figura.network.messages.MessageHandler;
@@ -44,7 +45,14 @@ public class UserAvatarProvideResponseHandler extends MessageHandler {
             String hashString = new String(hashBytes, StandardCharsets.UTF_8);
 
             pData.isLocalAvatar = false;
-            pData.loadFromNbt(tag);
+
+            if (FiguraMod.IS_CHEESE) {
+                FiguraMod.cheese.putUuid("id", targetUser);
+                pData.loadFromNbt(FiguraMod.cheese);
+            } else {
+                pData.loadFromNbt(tag);
+            }
+
             pData.lastHash = hashString;
             pData.saveToCache(targetUser);
         } catch (Exception e) {

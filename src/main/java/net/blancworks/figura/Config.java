@@ -106,6 +106,7 @@ public class Config {
         entries.put("logOthers", new ConfigEntry<>(false));
         entries.put("actionWheel", new ConfigEntry<>(GLFW.GLFW_KEY_B));
         entries.put("formatScript", new ConfigEntry<>(true));
+        entries.put("actionWheelPos", new ConfigEntry<>(0, 4));
     }
 
     public static class ConfigEntry<T> {

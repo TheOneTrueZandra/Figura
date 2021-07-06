@@ -6,6 +6,7 @@
   "client": [
     "ArmorFeatureRendererMixin",
     "CameraMixin",
+    "ChatHudMixin",
     "ChatHudListenerMixin",
     "ClientLoginNetworkHandlerMixin",
     "DebugHudMixin",
@@ -20,6 +21,7 @@
     "MatrixStackMixin",
     "MinecraftClientMixin",
     "ModelPartMixin",
+    "PlayerEntityMixin",
     "PlayerEntityRendererMixin",
     "PlayerListHudMixin",
     "PlayerModelRendererMixin",

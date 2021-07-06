@@ -75,7 +75,19 @@ public class ConfigListWidget extends ElementListWidget<ConfigListWidget.Entry> 
         );
         this.addEntry(new EnumEntry(new TranslatableText("gui.figura.config.scriptlog"), new TranslatableText("gui.figura.config.tooltip.scriptlog"), Config.entries.get("scriptLog"), scriptLogEntries));
 
+        //category title
+        this.addEntry(new ConfigListWidget.CategoryEntry(new TranslatableText("gui.figura.config.actionwheel")));
+
+        //entries
         this.addEntry(new KeyBindEntry(new TranslatableText("key.figura.actionwheel"), new TranslatableText("key.figura.tooltip.actionwheel"), Config.entries.get("actionWheel"), FiguraMod.actionWheel));
+
+        List<Text> actionWheelEntries = Arrays.asList(
+                new TranslatableText("gui.figura.config.actionwheelpos.mouse"),
+                new TranslatableText("gui.figura.config.actionwheelpos.top"),
+                new TranslatableText("gui.figura.config.actionwheelpos.bottom"),
+                new TranslatableText("gui.figura.config.actionwheelpos.center")
+        );
+        this.addEntry(new EnumEntry(new TranslatableText("gui.figura.config.actionwheelpos"), new TranslatableText("gui.figura.config.tooltip.actionwheelpos"), Config.entries.get("actionWheelPos"), actionWheelEntries));
 
         //category title
         this.addEntry(new ConfigListWidget.CategoryEntry(new TranslatableText("gui.figura.config.dev").formatted(Formatting.RED)));
@@ -86,7 +98,7 @@ public class ConfigListWidget extends ElementListWidget<ConfigListWidget.Entry> 
         this.addEntry(new ConfigListWidget.BooleanEntry(new TranslatableText("gui.figura.config.formatscript"), new TranslatableText("gui.figura.config.tooltip.formatscript"), Config.entries.get("formatScript")));
         this.addEntry(new ConfigListWidget.BooleanEntry(new TranslatableText("gui.figura.config.logothers"), new TranslatableText("gui.figura.config.tooltip.logothers"), Config.entries.get("logOthers")));
         this.addEntry(new ConfigListWidget.BooleanEntry(new TranslatableText("gui.figura.config.ownnametag"), new TranslatableText("gui.figura.config.tooltip.ownnametag"), Config.entries.get("ownNameTag")));
-        }
+    }
 
     @Override
     protected int getScrollbarPositionX() {

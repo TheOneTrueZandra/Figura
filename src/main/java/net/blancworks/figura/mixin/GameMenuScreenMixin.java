@@ -2,6 +2,7 @@ package net.blancworks.figura.mixin;
 
 import net.blancworks.figura.Config;
 import net.blancworks.figura.gui.FiguraGuiScreen;
+import net.blancworks.figura.gui.NewFiguraGuiScreen;
 import net.minecraft.client.gui.screen.GameMenuScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -18,6 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class GameMenuScreenMixin extends Screen {
 
     private FiguraGuiScreen figura$screen;
+    private NewFiguraGuiScreen figura$newScreen;
 
     protected GameMenuScreenMixin(Text title) {
         super(title);
@@ -63,5 +65,11 @@ public class GameMenuScreenMixin extends Screen {
             Identifier iconTexture = new Identifier("figura", "textures/gui/config_icon.png");
             addButton(new TexturedButtonWidget(x, y, 20, 20, 0, 0, 20, iconTexture, 20, 40, btn -> this.client.openScreen(figura$screen)));
         }
+
+        if (this.figura$newScreen == null)
+            this.figura$newScreen = new NewFiguraGuiScreen(this);
+
+        //Identifier iconnnnn = new Identifier("figura", "textures/gui/config_icon.png");
+        //addButton(new TexturedButtonWidget(this.width / 2 + 4 + 100 + 2, this.height / 4 + 96 + -16 + 24, 20, 20, 0, 0, 20, iconnnnn, 20, 40, btn -> this.client.openScreen(figura$newScreen)));
     }
 }

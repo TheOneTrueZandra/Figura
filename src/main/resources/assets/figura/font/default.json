@@ -35,6 +35,12 @@
       "file": "figura:font/starite.png",
       "ascent": 8,
       "chars": ["✭"]
+    },
+    {
+      "type": "bitmap",
+      "file": "figura:font/cheese.png",
+      "ascent": 8,
+      "chars": ["\uD83E\uDDC0"]
     }
   ]
 }

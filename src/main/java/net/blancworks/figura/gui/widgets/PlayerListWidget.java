@@ -72,8 +72,8 @@ public class PlayerListWidget extends CustomListWidget<PlayerListEntry, PlayerLi
                 addEntry(new GroupListWidgetEntry(id, this) {{
                     identifier = id.toString();
                     if (PlayerTrustManager.defaultGroups.contains(id)) {
-                        String key = "gui.figura." + id.getPath();
-                        displayText = new TranslatableText(key).setStyle(Style.EMPTY.withColor(TextColor.parse("gray")));
+                        Text text = new TranslatableText("gui.figura." + id.getPath());
+                        displayText = new LiteralText("- ").setStyle(Style.EMPTY.withColor(TextColor.parse("gray"))).append(text);
                     } else {
                         displayText = new LiteralText(id.getPath()).setStyle(Style.EMPTY.withColor(TextColor.parse("gray")));
                     }
@@ -87,8 +87,8 @@ public class PlayerListWidget extends CustomListWidget<PlayerListEntry, PlayerLi
                     identifier = id.toString();
 
                     if (PlayerTrustManager.defaultGroups.contains(id)) {
-                        String key = "gui.figura." + id.getPath();
-                        displayText = new TranslatableText(key).setStyle(Style.EMPTY.withColor(TextColor.parse("dark_gray")));
+                        Text text = new TranslatableText("gui.figura." + id.getPath());
+                        displayText = new LiteralText("+ ").setStyle(Style.EMPTY.withColor(TextColor.parse("dark_gray"))).append(text);
                     } else {
                         displayText = new LiteralText(id.getPath()).setStyle(Style.EMPTY.withColor(TextColor.parse("dark_gray")));
                     }

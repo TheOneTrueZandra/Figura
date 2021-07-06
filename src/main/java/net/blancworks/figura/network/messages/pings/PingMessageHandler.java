@@ -17,7 +17,7 @@ public class PingMessageHandler extends ChannelMessageHandler {
         
         short count = (short) Math.max(Math.min(stream.readShort(), 32), 0);
 
-        System.out.println("Got " + count + " pings");
+        //System.out.println("Got " + count + " pings");
 
         PlayerData data = PlayerDataManager.getDataForPlayer(senderID);
         

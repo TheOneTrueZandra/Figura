@@ -29,6 +29,7 @@ import net.minecraft.scoreboard.ScoreboardObjective;
 import net.minecraft.scoreboard.ScoreboardPlayerScore;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Matrix4f;
 import org.spongepowered.asm.mixin.Mixin;
@@ -74,7 +75,7 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
                 figura$applyPartCustomization(VanillaModelAPI.VANILLA_LEFT_PANTS, this.getModel().leftPantLeg);
                 figura$applyPartCustomization(VanillaModelAPI.VANILLA_RIGHT_PANTS, this.getModel().rightPantLeg);
 
-                if (FiguraMod.currentData.script != null && FiguraMod.currentData.script.customShadowSize != null && FiguraMod.currentData.getTrustContainer().getBoolSetting(PlayerTrustManager.ALLOW_VANILLA_MOD_ID)) {
+                if (FiguraMod.currentData.getTrustContainer().getBoolSetting(PlayerTrustManager.ALLOW_VANILLA_MOD_ID) && FiguraMod.currentData.script != null && FiguraMod.currentData.script.customShadowSize != null) {
                     shadowRadius = FiguraMod.currentData.script.customShadowSize;
                 }
             }
@@ -141,25 +142,37 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
         String playerName = entity.getEntityName();
 
         PlayerData currentData = PlayerDataManager.getDataForPlayer(uuid);
-        if (currentData != null && !playerName.equals("")) {
+        if (currentData != null && !playerName.equals("") && currentData.getTrustContainer().getBoolSetting(PlayerTrustManager.ALLOW_NAMEPLATE_MOD_ID)) {
             NamePlateCustomization nameplateData = currentData.script == null ? null : currentData.script.nameplateCustomizations.get(NamePlateAPI.ENTITY);
-            NamePlateAPI.applyFormattingRecursive((LiteralText) text, uuid, playerName, nameplateData, currentData);
 
-            if (currentData.getTrustContainer().getBoolSetting(PlayerTrustManager.ALLOW_NAMEPLATE_MOD_ID)) {
-                if (nameplateData == null)
-                    return;
+            if (nameplateData == null)
+                return;
 
-                if (nameplateData.enabled != null && !nameplateData.enabled) {
-                    ci.cancel();
-                    return;
-                }
-
-                //apply special nameplate settings
-                if (nameplateData.position != null)
-                    translation.add(nameplateData.position);
-                if (nameplateData.scale != null)
-                    scale = nameplateData.scale;
+            if (nameplateData.enabled != null && !nameplateData.enabled) {
+                ci.cancel();
+                return;
             }
+
+            try {
+                if (text instanceof TranslatableText) {
+                    Object[] args = ((TranslatableText) text).getArgs();
+
+                    for (Object arg : args) {
+                        if (NamePlateAPI.applyFormattingRecursive((LiteralText) arg, uuid, playerName, nameplateData, currentData))
+                            break;
+                    }
+                } else if (text instanceof LiteralText) {
+                    NamePlateAPI.applyFormattingRecursive((LiteralText) text, uuid, playerName, nameplateData, currentData);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            //apply special nameplate settings
+            if (nameplateData.position != null)
+                translation.add(nameplateData.position);
+            if (nameplateData.scale != null)
+                scale = nameplateData.scale;
         }
         else return;
 

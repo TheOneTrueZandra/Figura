@@ -14,6 +14,7 @@ import net.blancworks.figura.network.NewFiguraNetworkManager;
 import net.blancworks.figura.trust.PlayerTrustManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.options.KeyBinding;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.text.LiteralText;
@@ -74,6 +75,8 @@ public class CustomScript extends FiguraAsset {
 
     //Action Wheel customizations
     public Map<String, ActionWheelCustomization> actionWheelCustomizations = new HashMap<>();
+    public int actionWheelLeftSize = 4;
+    public int actionWheelRightSize = 4;
 
     //scripting custom keybinds
     public ArrayList<KeyBinding> keyBindings = new ArrayList<>();
@@ -88,6 +91,8 @@ public class CustomScript extends FiguraAsset {
 
     public boolean hasPlayer = false;
 
+    //TODO maybe remove this out from scripting
+    public DamageSource lastDamageSource;
 
     //----PINGS!----
 
@@ -371,65 +376,46 @@ public class CustomScript extends FiguraAsset {
     }
 
     public void onTick() {
-        if (!isDone)
-            return;
-        if (tickLuaEvent == null)
+        if (!isDone || tickLuaEvent == null || !hasPlayer || playerData.lastEntity == null)
             return;
 
+        setInstructionLimitPermission(PlayerTrustManager.MAX_TICK_ID);
+        try {
+            tickLuaEvent.call();
 
-        //Queue up a task for running a tick.
-        //queueTask(() -> {
+            //Process all pings.
+            while (incomingPingQueue.size() > 0) {
+                LuaPing p = incomingPingQueue.poll();
 
-            if (!hasPlayer)
-                return;
-
-            setInstructionLimitPermission(PlayerTrustManager.MAX_TICK_ID);
-            try {
-                tickLuaEvent.call();
-
-                //Process all pings.
-                while (incomingPingQueue.size() > 0) {
-                    LuaPing p = incomingPingQueue.poll();
-
-                    p.function.call(p.args);
-                }
-
-                //Batch-send pings.
-                if (outgoingPingQueue.size() > 0)
-                    ((NewFiguraNetworkManager) FiguraMod.networkManager).sendPing(outgoingPingQueue);
-            } catch (Exception error) {
-                loadError = true;
-                tickLuaEvent = null;
-                if (error instanceof LuaError)
-                    logLuaError((LuaError) error);
+                p.function.call(p.args);
             }
-            tickInstructionCount = scriptGlobals.running.state.bytecodes;
-        //});
+
+            //Batch-send pings.
+            if (outgoingPingQueue.size() > 0)
+                ((NewFiguraNetworkManager) FiguraMod.networkManager).sendPing(outgoingPingQueue);
+        } catch (Exception error) {
+            loadError = true;
+            tickLuaEvent = null;
+            if (error instanceof LuaError)
+                logLuaError((LuaError) error);
+        }
+        tickInstructionCount = scriptGlobals.running.state.bytecodes;
     }
 
     public void onRender(float deltaTime) {
-        if (!isDone)
-            return;
-        if (renderLuaEvent == null)
+        if (!isDone || renderLuaEvent == null || !hasPlayer || playerData.lastEntity == null)
             return;
 
-        //Queue up a task for running the render code.
-        //queueTask(() -> {
-
-            if (!hasPlayer)
-                return;
-
-            setInstructionLimitPermission(PlayerTrustManager.MAX_RENDER_ID);
-            try {
-                renderLuaEvent.call(LuaNumber.valueOf(deltaTime));
-            } catch (Exception error) {
-                loadError = true;
-                renderLuaEvent = null;
-                if (error instanceof LuaError)
-                    logLuaError((LuaError) error);
-            }
-            renderInstructionCount = scriptGlobals.running.state.bytecodes;
-        //});
+        setInstructionLimitPermission(PlayerTrustManager.MAX_RENDER_ID);
+        try {
+            renderLuaEvent.call(LuaNumber.valueOf(deltaTime));
+        } catch (Exception error) {
+            loadError = true;
+            renderLuaEvent = null;
+            if (error instanceof LuaError)
+                logLuaError((LuaError) error);
+        }
+        renderInstructionCount = scriptGlobals.running.state.bytecodes;
     }
 
     //--Tasks--

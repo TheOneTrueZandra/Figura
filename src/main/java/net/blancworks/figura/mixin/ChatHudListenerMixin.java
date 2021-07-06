@@ -29,41 +29,55 @@ public class ChatHudListenerMixin {
 
     @Inject(method = "onChatMessage", at = @At("HEAD"))
     private void onChatMessage(MessageType type, Text message, UUID senderUuid, CallbackInfo ci) {
-        if (senderUuid != Util.NIL_UUID && type == MessageType.CHAT && (boolean) Config.entries.get("chatMods").value) {
+        if (!(boolean) Config.entries.get("chatMods").value)
+            return;
 
-            //get player name
-            String playerName = "";
+        String playerName = "";
+        UUID uuid = senderUuid;
 
-            for (PlayerListEntry player : this.client.player.networkHandler.getPlayerList()) {
-                UUID entryUUID = player.getProfile().getId();
+        //get player profile
+        PlayerListEntry playerEntry = this.client.player.networkHandler.getPlayerListEntry(senderUuid);
 
-                if (senderUuid.compareTo(entryUUID) == 0) {
-                    playerName = player.getProfile().getName();
+        if (playerEntry == null) {
+            String textString = message.getString();
+            for (String part : textString.split("(§.)|[^\\w]")) {
+                if (part.isEmpty())
+                    continue;
+
+                PlayerListEntry entry = this.client.player.networkHandler.getPlayerListEntry(part);
+                if (entry != null) {
+                    playerName = entry.getProfile().getName();
+                    uuid = entry.getProfile().getId();
                     break;
                 }
             }
+        } else {
+            playerName = playerEntry.getProfile().getName();
+        }
 
-            //get player data
-            PlayerData currentData = PlayerDataManager.getDataForPlayer(senderUuid);
+        //get player data
+        PlayerData currentData = PlayerDataManager.getDataForPlayer(uuid);
 
-            //player not found or no data
-            if (playerName.equals("") || currentData == null)
-                return;
+        //player not found or no data
+        if (playerName.equals("") || currentData == null)
+            return;
 
-            //apply formatting
-            NamePlateCustomization nameplateData = currentData.script == null ? null : currentData.script.nameplateCustomizations.get(NamePlateAPI.CHAT);
+        //apply formatting
+        NamePlateCustomization nameplateData = currentData.script == null ? null : currentData.script.nameplateCustomizations.get(NamePlateAPI.CHAT);
 
+        try {
             if (message instanceof TranslatableText) {
                 Object[] args = ((TranslatableText) message).getArgs();
 
                 for (Object arg : args) {
-                    if (NamePlateAPI.applyFormattingRecursive((LiteralText) arg, senderUuid, playerName, nameplateData, currentData))
+                    if (NamePlateAPI.applyFormattingRecursive((LiteralText) arg, uuid, playerName, nameplateData, currentData))
                         break;
                 }
+            } else if (message instanceof LiteralText) {
+                NamePlateAPI.applyFormattingRecursive((LiteralText) message, uuid, playerName, nameplateData, currentData);
             }
-            else {
-                NamePlateAPI.applyFormattingRecursive((LiteralText) message, senderUuid, playerName, nameplateData, currentData);
-            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

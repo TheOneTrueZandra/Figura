@@ -4,6 +4,7 @@ import net.blancworks.figura.PlayerData;
 import net.blancworks.figura.lua.api.LuaEvent;
 import net.blancworks.figura.lua.api.MetaAPI;
 import net.blancworks.figura.lua.api.actionWheel.ActionWheelAPI;
+import net.blancworks.figura.lua.api.chat.ChatAPI;
 import net.blancworks.figura.lua.api.item.ItemStackAPI;
 import net.blancworks.figura.lua.api.keybind.KeyBindAPI;
 import net.blancworks.figura.lua.api.nameplate.NamePlateAPI;
@@ -75,6 +76,7 @@ public class FiguraLuaManager {
         apiSuppliers.put(NetworkAPI.getID(), NetworkAPI::getForScript);
         apiSuppliers.put(ItemStackAPI.getID(), ItemStackAPI::getForScript);
         apiSuppliers.put(KeyBindAPI.getID(), KeyBindAPI::getForScript);
+        apiSuppliers.put(ChatAPI.getID(), ChatAPI::getForScript);
     }
 
     public static void registerEvents(){

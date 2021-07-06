@@ -86,7 +86,7 @@ public class ItemModelAPI {
                 public LuaValue call() {
                     VanillaModelPartCustomization customization = targetScript.getOrMakePartCustomization(accessor);
 
-                    if (customization != null)
+                    if (customization != null && customization.visible != null)
                         return LuaBoolean.valueOf(customization.visible);
 
                     return NIL;

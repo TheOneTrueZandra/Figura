@@ -37,6 +37,7 @@ public class SoundAPI {
         return new ReadOnlyLuaTable(new LuaTable() {{
             set("playSound", new TwoArgFunction() {
                 // DEPRECATED
+                @Deprecated
                 @Override
                 public LuaValue call(LuaValue arg1, LuaValue arg2) {
                     // INCREDIBLY DEPRECATED

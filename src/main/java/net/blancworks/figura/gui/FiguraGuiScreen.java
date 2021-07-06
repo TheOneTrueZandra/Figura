@@ -321,7 +321,7 @@ public class FiguraGuiScreen extends Screen {
                 drawCenteredText(matrices, MinecraftClient.getInstance().textRenderer, new TranslatableText("gui.figura.deprecatedwarning"), this.width / 2, 4, TextColor.parse("red").getRgb());
 
             //mod version
-            drawCenteredText(matrices, MinecraftClient.getInstance().textRenderer, new LiteralText("Figura " + FiguraMod.modVersion).setStyle(Style.EMPTY.withItalic(true)), this.width / 2, this.height - 12, TextColor.parse("dark_gray").getRgb());
+            drawCenteredText(matrices, MinecraftClient.getInstance().textRenderer, new LiteralText("Figura " + FiguraMod.MOD_VERSION).setStyle(Style.EMPTY.withItalic(true)), this.width / 2, this.height - 12, TextColor.parse("dark_gray").getRgb());
         }
 
         //draw buttons

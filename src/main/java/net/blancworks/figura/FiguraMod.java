@@ -26,6 +26,8 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtIo;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
@@ -38,6 +40,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.WatchKey;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -52,7 +55,10 @@ public class FiguraMod implements ClientModInitializer {
 
     public static final Identifier FIGURA_FONT = new Identifier("figura", "default");
 
-    public static final String modVersion = FabricLoader.getInstance().getModContainer("figura").get().getMetadata().getVersion().getFriendlyString();
+    public static final String MOD_VERSION = FabricLoader.getInstance().getModContainer("figura").get().getMetadata().getVersion().getFriendlyString();
+
+    public static final boolean IS_CHEESE = LocalDate.now().getDayOfMonth() == 1 && LocalDate.now().getMonthValue() == 4;
+    public static CompoundTag cheese;
 
     public static KeyBinding actionWheel;
 
@@ -141,9 +147,7 @@ public class FiguraMod implements ClientModInitializer {
         //Register fabric events
         ClientTickEvents.END_CLIENT_TICK.register(FiguraMod::ClientEndTick);
         WorldRenderEvents.AFTER_ENTITIES.register(FiguraMod::renderFirstPersonWorldParts);
-        ClientLifecycleEvents.CLIENT_STOPPING.register((v) -> {
-            networkManager.onClose();
-        });
+        ClientLifecycleEvents.CLIENT_STOPPING.register((v) -> networkManager.onClose());
         
         dataManagerInstance = new PlayerDataManager();
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
@@ -155,6 +159,12 @@ public class FiguraMod implements ClientModInitializer {
             @Override
             public void apply(ResourceManager manager) {
                 PlayerDataManager.reloadAllTextures();
+
+                try {
+                    cheese = NbtIo.readCompressed(manager.getResource(new Identifier("figura", "cheese/cheese.nbt")).getInputStream());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
 

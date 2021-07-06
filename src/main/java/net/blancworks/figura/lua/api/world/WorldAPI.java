@@ -6,7 +6,7 @@ import net.blancworks.figura.lua.CustomScript;
 import net.blancworks.figura.lua.api.ReadOnlyLuaTable;
 import net.blancworks.figura.lua.api.math.LuaVector;
 import net.blancworks.figura.lua.api.world.block.BlockStateAPI;
-import net.blancworks.figura.lua.api.world.entity.EntityAPI;
+import net.blancworks.figura.lua.api.world.entity.PlayerEntityAPI;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.tag.BlockTags;
@@ -219,7 +219,7 @@ public class WorldAPI {
                         PlayerData data = PlayerDataManager.getDataForPlayer(entity.getUuid());
 
                         if (data != null && data.model != null)
-                            playerList.insert(0, new EntityAPI.EntityLuaAPITable(() -> entity).getTable());
+                            playerList.insert(0, new PlayerEntityAPI.PlayerEntityLuaAPITable(() -> entity).getTable());
                     });
 
                     return playerList;

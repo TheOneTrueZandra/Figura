@@ -14,6 +14,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.luaj.vm2.*;
 import org.luaj.vm2.lib.OneArgFunction;
+import org.luaj.vm2.lib.TwoArgFunction;
 import org.luaj.vm2.lib.ZeroArgFunction;
 
 public class ItemStackAPI {
@@ -25,10 +26,15 @@ public class ItemStackAPI {
     public static ReadOnlyLuaTable getForScript(CustomScript script) {
         return new ReadOnlyLuaTable(new LuaTable() {{
 
-            set("createItem", new OneArgFunction() {
+            set("createItem", new TwoArgFunction() {
                 @Override
-                public LuaValue call(LuaValue arg) {
-                    return getTable(Registry.ITEM.get(Identifier.tryParse(arg.checkjstring())).getDefaultStack());
+                public LuaValue call(LuaValue arg1, LuaValue arg2) {
+                    ItemStack item = Registry.ITEM.get(Identifier.tryParse(arg1.checkjstring())).getDefaultStack();
+
+                    if (!arg2.isnil())
+                        setItemNbt(item, arg2.checkjstring());
+
+                    return getTable(item);
                 }
             });
 
@@ -120,20 +126,23 @@ public class ItemStackAPI {
             set("setTag", new OneArgFunction() {
                 @Override
                 public LuaValue call(LuaValue arg) {
-                    StringReader reader = new StringReader(arg.checkjstring());
-
-                    try {
-                        stack.setTag((CompoundTag) new StringNbtReader(reader).parseTag());
-                    } catch (CommandSyntaxException e) {
-                        throw new LuaError(e.getMessage());
-                    } catch (Exception e) {
-                        throw new LuaError("Could not parse argument");
-                    }
-
+                    setItemNbt(stack, arg.checkjstring());
                     return NIL;
                 }
             });
 
         }});
+    }
+
+    public static void setItemNbt(ItemStack item, String s) {
+        StringReader reader = new StringReader(s);
+
+        try {
+            item.setTag((CompoundTag) new StringNbtReader(reader).parseTag());
+        } catch (CommandSyntaxException e) {
+            throw new LuaError("NBT parse error\n" + e.getMessage());
+        } catch (Exception e) {
+            throw new LuaError("Could not parse NBT");
+        }
     }
 }

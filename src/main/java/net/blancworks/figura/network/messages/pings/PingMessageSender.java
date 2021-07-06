@@ -30,7 +30,7 @@ public class PingMessageSender extends MessageSender {
 
         outputStream.writeShort(pingSet.size());
         
-        System.out.println("Wrote " + pingSet.size() + " pings");
+        //System.out.println("Wrote " + pingSet.size() + " pings");
         
         for(int i = 0; i < pingSet.size(); i++){
             CustomScript.LuaPing p = pingSet.poll();

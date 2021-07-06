@@ -9,6 +9,7 @@ import net.minecraft.client.gui.hud.PlayerListHud;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -30,7 +31,21 @@ public class PlayerListHudMixin {
             PlayerData currentData = PlayerDataManager.getDataForPlayer(uuid);
             if (currentData != null && !playerName.equals("")) {
                 NamePlateCustomization nameplateData = currentData.script == null ? null : currentData.script.nameplateCustomizations.get(NamePlateAPI.TABLIST);
-                NamePlateAPI.applyFormattingRecursive((LiteralText) text, uuid, playerName, nameplateData, currentData);
+
+                try {
+                    if (text instanceof TranslatableText) {
+                        Object[] args = ((TranslatableText) text).getArgs();
+
+                        for (Object arg : args) {
+                            if (NamePlateAPI.applyFormattingRecursive((LiteralText) arg, uuid, playerName, nameplateData, currentData))
+                                break;
+                        }
+                    } else if (text instanceof LiteralText) {
+                        NamePlateAPI.applyFormattingRecursive((LiteralText) text, uuid, playerName, nameplateData, currentData);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
 

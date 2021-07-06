@@ -57,8 +57,9 @@
 
   "gui.figura.config.nametag": "NameTag",
   "gui.figura.config.misc": "Misc",
+  "gui.figura.config.actionwheel": "Action Wheel",
   "gui.figura.config.dev": "Developer Settings",
-  
+
   "gui.figura.config.previewnametag": "Show Preview NameTag",
   "gui.figura.config.tooltip.previewnametag": "Displays your NameTag on the model preview screen",
 
@@ -102,6 +103,13 @@
   "gui.figura.config.scriptlog.console_chat": "Console/Chat",
   "gui.figura.config.scriptlog.console": "Console",
   "gui.figura.config.scriptlog.chat": "Chat",
+
+  "gui.figura.config.actionwheelpos": "Action Wheel Title position",
+  "gui.figura.config.tooltip.actionwheelpos": "The position of the Title of the Action Wheel",
+  "gui.figura.config.actionwheelpos.mouse": "Mouse",
+  "gui.figura.config.actionwheelpos.top": "Top",
+  "gui.figura.config.actionwheelpos.bottom": "Bottom",
+  "gui.figura.config.actionwheelpos.center": "Center",
 
   "gui.figura.toast.upload.success.title": "Avatar Uploaded!",
 
