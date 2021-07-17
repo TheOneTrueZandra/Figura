@@ -215,6 +215,9 @@ public class BlockbenchModelDeserializer implements JsonDeserializer<CustomModel
 
         Vector3f from = v3fFromJArray(elementObject.get("from").getAsJsonArray());
         Vector3f to = v3fFromJArray(elementObject.get("to").getAsJsonArray());
+
+        elementPart.size = new Vector3f(to.getX() - from.getX(), to.getY() - from.getY(), to.getZ() - from.getZ());
+
         if (elementObject.has("origin")) {
             Vector3f corrected = v3fFromJArray(elementObject.get("origin").getAsJsonArray());
             corrected.set(corrected.getX(), corrected.getY(), -corrected.getZ());
