@@ -1,0 +1,105 @@
+{
+  "figura.mark": "△",
+  "figura.star": "⭐",
+
+  "gui.figura.trustmenutitle": "Figura信頼メニュー",
+  "gui.figura.configtitle": "Figura設定メニュー",
+  "gui.figura.menutitle": "Figuraメニュー",
+
+  "gui.figura.blocked": "ブロック済",
+  "gui.figura.untrusted": "信頼していない",
+  "gui.figura.trusted": "信頼できる",
+  "gui.figura.friend": "フレンド",
+
+  "gui.figura.maxinitinstructions": "最大初期化命令",
+  "gui.figura.maxtickinstructions": "最大ティック命令",
+  "gui.figura.maxrenderinstructions": "最大レンダリング命令",
+  "gui.figura.maxcomplexity": "最大複雑さ",
+  "gui.figura.allowvanillaedit": "バニラアバターの変更",
+  "gui.figura.allownameplateedit": "ネームプレート/チャットの名前の変更",
+  "gui.figura.allowoffscreenrendering": "画面外レンダリング",
+  "gui.figura.maxparticles": "1秒あたりの最大パーティクル数",
+  "gui.figura.maxsfx": "1秒当たりの最大サウンド数",
+
+  "gui.figura.dropconfirm": "以下のモデルをFiguraに追加しますか?",
+
+  "gui.script.none": "ない",
+  "gui.script.ok": "はい",
+  "gui.script.error": "エラー",
+
+  "gui.figura.button.trustmenu": "信頼メニュー",
+  "gui.figura.button.configmenu": "設定",
+  "gui.figura.button.back": "戻る",
+  "gui.figura.button.deleteavatar": "アバターをクリア",
+  "gui.figura.button.clearall": "全てのアバターをクリア",
+  "gui.figura.button.help": "ヘルプ",
+  "gui.figura.button.openfolder": "モデルフォルダーを開く",
+  "gui.figura.button.resetallperm": "全ての権限をリセット",
+  "gui.figura.button.resetperm": "権限をリセット",
+  "gui.figura.button.reloadavatar": "アバターを再読み込み",
+  "gui.figura.button.search": "検索中...",
+
+  "gui.figura.button.tooltip.upload": "アバターをアップロードし、マルチプレイで表示します",
+  "gui.figura.button.tooltip.reloadavatar": "ローカルでアバターを消去して再ダウンロードします",
+  "gui.figura.button.tooltip.deleteavatar": "左シフトを押しながらクリックでオンラインアバターを消去します",
+  "gui.figura.button.tooltip.deleteavatartwo": "その際、他の人のアバターも消去されます",
+  "gui.figura.button.tooltip.resetperm": "左シフトを押しながらクリックでこのユーザーの選択した権限をリセットします",
+  "gui.figura.button.tooltip.cantreset": "プリセットのリセットができません",
+  "gui.figura.button.tooltip.resetallperm": "左シフトを押しながらクリックでこのユーザーの権限をリセットします",
+  "gui.figura.button.tooltip.clearcache": "左シフトを押しながらクリックで読み込まれたアバターを全て消去します",
+
+  "gui.figura.deprecatedwarning" : "*ルートフォルダ内のモデルの使用は非推奨です",
+  "gui.figura.complexity": "複雑さ: %d",
+  "gui.figura.filesize": "ファイルサイズ: %dkb",
+  "gui.figura.name": "名前: %d",
+
+  "gui.figura.config.nametag": "ネームタグ",
+  "gui.figura.config.misc": "その他",
+  "gui.figura.config.dev": "開発者設定",
+
+  
+  "gui.figura.config.previewnametag": "ネームタグの表示をプレビュー",
+  "gui.figura.config.tooltip.previewnametag": "モデルプレビュー画面であなたのネームタグを表示します",
+
+  "gui.figura.config.nametagmods": "プレイヤーネームタグのカスタマイズ",
+  "gui.figura.config.tooltip.nametagmods": "ネームタグのプレイヤー名をカスタマイズできます",
+
+  "gui.figura.config.chatmods": "チャットのカスタマイズ",
+  "gui.figura.config.tooltip.chatmods": "チャット上のプレイヤー名をカスタマイズできます",
+
+  "gui.figura.config.listmods": "プレイヤーリストのカスタマイズ",
+  "gui.figura.config.tooltip.listmods": "Tabプレイヤーリストのプレイヤー名をカスタマイズできます",
+
+  "gui.figura.config.usenewnetwork": "新しいネットワークを使う",
+  "gui.figura.config.tooltip.usenewnetwork": "オンラインモデルで新旧どちらのネットワークを使うか切り替え",
+
+  "gui.figura.config.uselocalserver": "ローカルサーバーを使う",
+  "gui.figura.config.tooltip.uselocalserver": "オンラインモデルでローカルサーバーを使うか、メインのオンラインサーバーを使うか切り替える",
+
+  "gui.figura.config.nametagicon": "ネームタグのアイコン表示",
+  "gui.figura.config.tooltip.nametagicon": "Figura使用者の%dに△マークを表示するか",
+
+  "gui.figura.config.ownnametag": "自身のネームタグを表示する",
+  "gui.figura.config.tooltip.ownnametag": "ゲーム内で自分のネームタグを表示するか",
+
+  "gui.figura.config.buttonlocation": "Figuraボタンの位置",
+  "gui.figura.config.tooltip.buttonlocation": "Figuraのの位置を決められます",
+  "gui.figura.config.buttonlocation.topleft": "左上",
+  "gui.figura.config.buttonlocation.topright": "右上",
+  "gui.figura.config.buttonlocation.bottomleft": "左下",
+  "gui.figura.config.buttonlocation.bottomright": "右下",
+  "gui.figura.config.buttonlocation.icon": "アイコン",
+
+  "gui.figura.config.scriptlog": "スクリプトログ",
+  "gui.figura.config.tooltip.scriptlog": "スクリプトデバッグログの出力先",
+  "gui.figura.config.scriptlog.console_chat": "コンソール/チャット",
+  "gui.figura.config.scriptlog.console": "コンソール",
+  "gui.figura.config.scriptlog.chat": "チャット",
+
+  "gui.figura.toast.upload.success.title": "アバターをアップロードしました!",
+
+  "gui.figura.toast.upload.error.title": "アバターのアップロードに失敗しました!",
+  "gui.figura.toast.upload.error.many": "アバターの数が多すぎます!!",
+  "gui.figura.toast.upload.error.empty": "そのアバターは空です!!",
+  "gui.figura.toast.upload.error.space": "サーバーの容量が足りません!!"
+}
