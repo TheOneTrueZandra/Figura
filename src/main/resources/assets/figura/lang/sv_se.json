@@ -1,0 +1,90 @@
+{
+  "figura.mark": "△",
+  "figura.star": "☆",
+
+  "gui.figura.trustmenutitle": "Figura Tillitsmeny",
+  "gui.figura.configtitle": "Figura Konfigureringsmeny",
+  "gui.figura.menutitle": "Figura Meny",
+
+  "gui.figura.blocked": "Blockerad",
+  "gui.figura.untrusted": "Opålitlig",
+  "gui.figura.trusted": "Pålitlig",
+  "gui.figura.friend": "Vän",
+
+  "gui.figura.maxinitinstructions": "Max Init-instruktioner",
+  "gui.figura.maxtickinstructions": "Max Tick-instruktioner",
+  "gui.figura.maxrenderinstructions": "Max Render-instruktioner",
+  "gui.figura.maxcomplexity": "Max Komplexitet",
+  "gui.figura.allowvanillaedit": "Vanilla Avatar Förändringar",
+  "gui.figura.maxparticles": "Max Antal Partiklar Per Sekund",
+  "gui.figura.maxsfx": "Max Antal Ljud Per Sekund",
+
+  "gui.figura.dropconfirm": "Vill du lägga till följande modeller till Figura?",
+
+  "gui.script.none": "ingen",
+  "gui.script.ok": "OK",
+  "gui.script.error": "FEL",
+
+  "gui.figura.button.trustmenu": "Tillitsmeny",
+  "gui.figura.button.configmenu": "Inställningar",
+  "gui.figura.button.back": "Tillbaka",
+  "gui.figura.button.deleteavatar": "Rensa Avatar",
+  "gui.figura.button.clearall": "Rensa ALLA Avatarer",
+  "gui.figura.button.help": "Hjälp",
+  "gui.figura.button.openfolder": "Öppna Models Mappen",
+  "gui.figura.button.resetallperm": "Återställ ALLA Behörigheter",
+  "gui.figura.button.resetperm": "Återställ Behörighet",
+  "gui.figura.button.reloadavatar": "Ladda om avatar",
+  "gui.figura.button.search": "Sök...",
+
+  "gui.figura.button.tooltip.upload": "Klicka för att ladda upp och visa din avatar i flerspelar-läge",
+  "gui.figura.button.tooltip.reloadavatar": "Klicka för att rensa din avatar lokalt och återigen ladda ned den",
+  "gui.figura.button.tooltip.deleteavatar": "Håll VÄNSTRA SKIFT-tangenten och klicka för att RENSA DIN AVATAR ONLINE",
+  "gui.figura.button.tooltip.deleteavatartwo": "Detta rensar din avatar även för alla andra",
+  "gui.figura.button.tooltip.resetperm": "Håll VÄNSTRA SKIFT-tangenten och klicka för att återställa valda behörigheten för denna användare",
+  "gui.figura.button.tooltip.cantreset": "Kan ej återställa Förinställningar",
+  "gui.figura.button.tooltip.resetallperm": "Håll VÄNSTRA SKIFT-tangenten och klicka för att återställa behörigheter för denna användare",
+  "gui.figura.button.tooltip.clearcache": "Håll VÄNSTRA SKIFT-tangenten och klicka för att rensa all laddad avatardata.",
+
+  "gui.figura.deprecatedwarning" : "*Användningen av modeller i rotmappen har utfasats, se wiki:n för mer information*",
+  "gui.figura.complexity": "Komplexitet: %d",
+  "gui.figura.filesize": "Filstorlek: %dkb",
+  "gui.figura.name": "Namn: %d",
+
+  "gui.figura.config.nametag": "NamnBricka",
+  "gui.figura.config.misc": "Diverse",
+  "gui.figura.config.dev": "Utvecklarinställningar",
+
+  
+  "gui.figura.config.previewnametag": "Förhandsvisa NamnBricka",
+  "gui.figura.config.tooltip.previewnametag": "Visar din NamnBricka på modellförhandsvisningskärmen",
+
+  "gui.figura.config.nametagmark": "NamnBricka Figura-Märke",
+  "gui.figura.config.tooltip.nametagmark": "Lägger till Märket △ till NamnBrickan av spelare som använder Figura",
+  
+  "gui.figura.config.listmark": "Spelarlista Figura-Märke",
+  "gui.figura.config.tooltip.listmark": "Lägger till Märket △ på tabb-listan till spelare som använder Figura",
+
+  "gui.figura.config.chatmark": "Chatt Figura-Märke",
+  "gui.figura.config.tooltip.chatmark": "Lägger till Märket △ till chattnamnen av spelare som använder Figura",
+
+  "gui.figura.config.usenewnetwork": "Använd det nya nätverket",
+  "gui.figura.config.tooltip.usenewnetwork": "Växlar mellan att använda det gamla och det nya nätverket för online-modeller",
+
+  "gui.figura.config.uselocalserver": "Använd den lokala servern",
+  "gui.figura.config.tooltip.uselocalserver": "Växlar mellan att använda den lokala servern eller main-servern för online-modeller",
+
+  "gui.figura.config.buttonlocation": "Figura-knapp position",
+  "gui.figura.config.tooltip.buttonlocation": "Positionen där Figura-inställningsknappen bör vara",
+  "gui.figura.config.buttonlocation.topleft": "Topp-Vänster",
+  "gui.figura.config.buttonlocation.topright": "Topp-Höger",
+  "gui.figura.config.buttonlocation.bottomleft": "Botten-Vänster",
+  "gui.figura.config.buttonlocation.bottomright": "Botten-Höger",
+  "gui.figura.config.buttonlocation.icon": "Ikon",
+
+  "gui.figura.config.scriptlog": "Skriptlogg",
+  "gui.figura.config.tooltip.scriptlog": "Utmatningsplats för skriptfelsökningslogg",
+  "gui.figura.config.scriptlog.console_chat": "Konsoll/Chatt",
+  "gui.figura.config.scriptlog.console": "Konsoll",
+  "gui.figura.config.scriptlog.chat": "Chatt"
+}
