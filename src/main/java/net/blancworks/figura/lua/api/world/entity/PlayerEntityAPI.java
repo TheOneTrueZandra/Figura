@@ -123,8 +123,24 @@ public class PlayerEntityAPI {
             superTable.set("lastDamageSource", new ZeroArgFunction() {
                 @Override
                 public LuaValue call() {
-                    DamageSource ds = PlayerDataManager.getDataForPlayer(targetEntity.get().getUuid()).script.lastDamageSource;
+                    CustomScript script = PlayerDataManager.getDataForPlayer(targetEntity.get().getUuid()).script;
+                    if (script == null) return NIL;
+
+                    DamageSource ds = script.lastDamageSource;
                     return ds == null ? NIL : LuaValue.valueOf(ds.name);
+                }
+            });
+
+            superTable.set("getStoredValue", new OneArgFunction() {
+                @Override
+                public LuaValue call(LuaValue arg1) {
+                    String key = arg1.checkjstring();
+
+                    CustomScript script = PlayerDataManager.getDataForPlayer(targetEntity.get().getUuid()).script;
+                    if (script == null) return NIL;
+
+                    LuaValue val = script.SHARED_VALUES.get(key);
+                    return val == null ? NIL : val;
                 }
             });
 

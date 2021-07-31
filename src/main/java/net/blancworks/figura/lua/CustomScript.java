@@ -96,6 +96,8 @@ public class CustomScript extends FiguraAsset {
 
     public static final Text LOG_PREFIX = new LiteralText("").formatted(Formatting.ITALIC).append(new LiteralText("[lua] ").formatted(Formatting.BLUE));
 
+    public final Map<String, LuaValue> SHARED_VALUES = new HashMap<>();
+
     //----PINGS!----
 
     //Maps functions from lua to shorts for data saving.
@@ -322,6 +324,16 @@ public class CustomScript extends FiguraAsset {
                     e.printStackTrace();
                 }
 
+                return NIL;
+            }
+        });
+
+        //store a value to be read from others scripts
+        scriptGlobals.set("storeValue", new TwoArgFunction() {
+            @Override
+            public LuaValue call(LuaValue arg1, LuaValue arg2) {
+                String key = arg1.checkjstring();
+                SHARED_VALUES.put(key, arg2);
                 return NIL;
             }
         });
