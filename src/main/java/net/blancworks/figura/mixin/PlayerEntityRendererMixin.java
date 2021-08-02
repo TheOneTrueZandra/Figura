@@ -130,91 +130,158 @@ public abstract class PlayerEntityRendererMixin extends LivingEntityRenderer<Abs
 
     @Inject(method = "renderLabelIfPresent", at = @At("HEAD"), cancellable = true)
     private<T extends Entity> void renderFiguraLabelIfPresent(AbstractClientPlayerEntity entity, Text text, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, CallbackInfo ci) {
-
-        if (!(boolean) Config.entries.get("nameTagMods").value)
-            return;
-
-        float f = entity.getHeight() + 0.5F;
-        Vec3f translation = new Vec3f(0.0f, f, 0.0f);
-        Vec3f scale = new Vec3f(1.0f, 1.0f, 1.0f);
-
-        //apply nameplate changes
+        //get uuid and name
         UUID uuid = entity.getGameProfile().getId();
         String playerName = entity.getEntityName();
 
+        //check for data and trust settings
         PlayerData currentData = PlayerDataManager.getDataForPlayer(uuid);
-        if (currentData == null || playerName.equals("") || !currentData.getTrustContainer().getBoolSetting(PlayerTrustManager.ALLOW_NAMEPLATE_MOD_ID))
+        if (!(boolean) Config.entries.get("nameTagMods").value || currentData == null || playerName.equals("") || !currentData.getTrustContainer().getBoolSetting(PlayerTrustManager.ALLOW_NAMEPLATE_MOD_ID))
             return;
 
+        //cancel callback info
+        ci.cancel();
+
+        //nameplate
         NamePlateCustomization nameplateData = currentData.script == null ? null : currentData.script.nameplateCustomizations.get(NamePlateAPI.ENTITY);
 
+        //apply text and/or badges
         try {
             if (text instanceof TranslatableText) {
                 Object[] args = ((TranslatableText) text).getArgs();
 
                 for (Object arg : args) {
-                    if (NamePlateAPI.applyFormattingRecursive((LiteralText) arg, uuid, playerName, nameplateData, currentData))
+                    if (NamePlateAPI.applyFormattingRecursive((LiteralText) arg, uuid, playerName, nameplateData, currentData, true))
                         break;
                 }
             } else if (text instanceof LiteralText) {
-                NamePlateAPI.applyFormattingRecursive((LiteralText) text, uuid, playerName, nameplateData, currentData);
+                NamePlateAPI.applyFormattingRecursive((LiteralText) text, uuid, playerName, nameplateData, currentData, true);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
-        if(nameplateData != null){
-            if (nameplateData.enabled != null && !nameplateData.enabled) {
-                ci.cancel();
-                return;
-            }
 
-            //apply special nameplate settings
+        //nameplate transformations
+        float spacing = entity.getHeight() + 0.5F;
+        Vec3f translation = new Vec3f(0.0f, spacing, 0.0f);
+        Vec3f scale = new Vec3f(1.0f, 1.0f, 1.0f);
+        boolean enabled = true;
+        int extraOffset = 0;
+
+        //apply main nameplate transformations
+        if (nameplateData != null) {
+            if (nameplateData.enabled != null)
+                enabled = nameplateData.enabled;
             if (nameplateData.position != null)
                 translation.add(nameplateData.position);
             if (nameplateData.scale != null)
                 scale = nameplateData.scale;
         }
-        
+
         matrices.push();
         matrices.translate(translation.getX(), translation.getY(), translation.getZ());
         matrices.scale(scale.getX(), scale.getY(), scale.getZ());
 
         //render scoreboard
-        double d = this.dispatcher.getSquaredDistanceToCamera(entity);
-        if (d < 100.0D) {
+        double distance = this.dispatcher.getSquaredDistanceToCamera(entity);
+        if (enabled && distance < 100.0D) {
+            //get scoreboard
             Scoreboard scoreboard = entity.getScoreboard();
             ScoreboardObjective scoreboardObjective = scoreboard.getObjectiveForSlot(2);
             if (scoreboardObjective != null) {
-                matrices.translate(0.0D, -f, 0.0D);
+                //extra line offset
+                extraOffset++;
+
+                //render scoreboard
+                matrices.translate(0.0D, -spacing, 0.0D);
+
                 ScoreboardPlayerScore scoreboardPlayerScore = scoreboard.getPlayerScore(entity.getEntityName(), scoreboardObjective);
                 super.renderLabelIfPresent(entity, (new LiteralText(Integer.toString(scoreboardPlayerScore.getScore()))).append(" ").append(scoreboardObjective.getDisplayName()), matrices, vertexConsumers, light);
-                Objects.requireNonNull(this.getTextRenderer());
-                matrices.translate(0.0D, 9.0F * 1.15F * 0.025F + f, 0.0D);
+
+                //apply line offset
+                matrices.translate(0.0D, 9.0F * 1.15F * 0.025F + spacing, 0.0D);
             }
         }
 
-        //render nametag
-        if (!(d > 4096.0D)) {
-            boolean bl = !entity.isSneaky();
+        //render nameplate
+        if (enabled && !(distance > 4096.0D)) {
+            //extra line offset
+            extraOffset++;
+
+            boolean sneaky = !entity.isSneaky();
+
+            //matrices transformations
             matrices.push();
+
             matrices.multiply(this.dispatcher.getRotation());
             matrices.scale(-0.025F, -0.025F, 0.025F);
             Matrix4f matrix4f = matrices.peek().getModel();
-            float g = MinecraftClient.getInstance().options.getTextBackgroundOpacity(0.25F);
-            int j = (int)(g * 255.0F) << 24;
-            TextRenderer textRenderer = Objects.requireNonNull(this.getTextRenderer());
-            float h = (float)(-textRenderer.getWidth(text) / 2);
-            textRenderer.draw(text, h, 0, 553648127, false, matrix4f, vertexConsumers, bl, j, light);
-            if (bl) {
-                textRenderer.draw(text, h, 0, -1, false, matrix4f, vertexConsumers, false, 0, light);
-            }
-            matrices.pop();
-        }
 
+            matrices.pop();
+
+            int backgroundColor = (int) (MinecraftClient.getInstance().options.getTextBackgroundOpacity(0.25F) * 255.0F) << 24;
+
+            TextRenderer textRenderer = Objects.requireNonNull(this.getTextRenderer());
+            float textWidth = (float) (-textRenderer.getWidth(text) / 2);
+
+            //render
+            textRenderer.draw(text, textWidth, 0, 553648127, false, matrix4f, vertexConsumers, sneaky, backgroundColor, light);
+            if (sneaky)
+                textRenderer.draw(text, textWidth, 0, -1, false, matrix4f, vertexConsumers, false, 0, light);
+        }
         matrices.pop();
 
-        ci.cancel();
+        //extra line
+        NamePlateCustomization extraData = currentData.script == null ? null : currentData.script.nameplateCustomizations.get(NamePlateAPI.ENTITY_EXTRA);
+
+        //finish if no new line
+        if (extraData == null || extraData.enabled == null || !extraData.enabled)
+            return;
+
+        //set extra text
+        Text extraText = new LiteralText("");
+        extraText = NamePlateAPI.applyNameplateFormatting(extraText, uuid, extraData, currentData, false);
+
+        //extra nameplate transformations
+        translation = new Vec3f(0.0f, 9.0F * 1.15F * 0.025F * extraOffset + spacing, 0.0f);
+        scale = new Vec3f(1.0f, 1.0f, 1.0f);
+
+        //apply extra nameplate transformations
+        if (extraData.enabled != null)
+            enabled = extraData.enabled;
+        if (extraData.position != null)
+            translation.add(extraData.position);
+        if (extraData.scale != null)
+            scale = extraData.scale;
+
+        matrices.push();
+        matrices.translate(translation.getX(), translation.getY(), translation.getZ());
+        matrices.scale(scale.getX(), scale.getY(), scale.getZ());
+
+        //render extra nameplate line
+        if (enabled && !(distance > 4096.0D)) {
+            boolean sneaky = !entity.isSneaky();
+
+            //matrices transformations
+            matrices.push();
+
+            matrices.multiply(this.dispatcher.getRotation());
+            matrices.scale(-0.025F, -0.025F, 0.025F);
+            Matrix4f matrix4f = matrices.peek().getModel();
+
+            matrices.pop();
+
+            int backgroundColor = (int) (MinecraftClient.getInstance().options.getTextBackgroundOpacity(0.25F) * 255.0F) << 24;
+
+            TextRenderer textRenderer = Objects.requireNonNull(this.getTextRenderer());
+            float textWidth = (float) (-textRenderer.getWidth(extraText) / 2);
+
+            //render
+            textRenderer.draw(extraText, textWidth, 0, 553648127, false, matrix4f, vertexConsumers, sneaky, backgroundColor, light);
+            if (sneaky)
+                textRenderer.draw(extraText, textWidth, 0, -1, false, matrix4f, vertexConsumers, false, 0, light);
+        }
+        matrices.pop();
     }
 
     @Inject(at = @At("RETURN"), method = "renderArm")
